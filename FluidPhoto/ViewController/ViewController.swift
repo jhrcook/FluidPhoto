@@ -173,10 +173,13 @@ class ViewController: UIViewController {
         if segue.identifier == "ShowPhotoPageView" {
             let nav = self.navigationController
             let vc = segue.destination as! PhotoPageContainerViewController
+            
             nav?.delegate = vc.transitionController
             vc.transitionController.fromDelegate = self
             vc.transitionController.toDelegate = vc
+            
             vc.delegate = self
+            
             vc.currentIndex = self.selectedIndexPath.row
             vc.photos = self.photos
         }
