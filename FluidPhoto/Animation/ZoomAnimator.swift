@@ -50,7 +50,7 @@ class ZoomAnimator: NSObject {
                 return
         }
         
-        //
+        // these are optional functions in the delegates that get called before the animation runs
         self.fromDelegate?.transitionWillStartWith(zoomAnimator: self)
         self.toDelegate?.transitionWillStartWith(zoomAnimator: self)
         
@@ -76,27 +76,30 @@ class ZoomAnimator: NSObject {
         let finalTransitionSize = calculateZoomInImageFrame(image: referenceImage, forView: toVC.view)
         
         // animation
-        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, usingSpringWithDamping: 0.8,
-                       initialSpringVelocity: 0,
-                       options: [.transitionCrossDissolve],
-                       animations: {
-                         toVC.view.alpha = 1.0                                  // animate transparency of destination view in
-                         self.transitionImageView?.frame = finalTransitionSize  // animate size of image view
-                         fromVC.tabBarController?.tabBar.alpha = 0              // animate transparency of tab bar out
-                       },
-                       completion: { _ in
-                         // remove transition image view and show both view controllers, again
-                         self.transitionImageView?.removeFromSuperview()
-                         self.transitionImageView = nil
-                         toReferenceImageView.isHidden = false
-                         fromReferenceImageView.isHidden = false
+        UIView.animate(
+            withDuration: transitionDuration(using: transitionContext),
+            delay: 0,
+            usingSpringWithDamping: 0.8,
+            initialSpringVelocity: 0,
+            options: [.transitionCrossDissolve],
+            animations: {
+                toVC.view.alpha = 1.0                                  // animate transparency of destination view in
+                self.transitionImageView?.frame = finalTransitionSize  // animate size of image view
+                fromVC.tabBarController?.tabBar.alpha = 0              // animate transparency of tab bar out
+        },
+            completion: { _ in
+                 // remove transition image view and show both view controllers, again
+                 self.transitionImageView?.removeFromSuperview()
+                 self.transitionImageView = nil
+                 toReferenceImageView.isHidden = false
+                 fromReferenceImageView.isHidden = false
                         
-                         // end the transition (unless was cancelled)
-                         transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-                         self.toDelegate?.transitionDidEndWith(zoomAnimator: self)
-                         self.fromDelegate?.transitionDidEndWith(zoomAnimator: self)
-                       }
-        )
+                 // end the transition (unless was cancelled)
+                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+                 self.toDelegate?.transitionDidEndWith(zoomAnimator: self)
+                 self.fromDelegate?.transitionDidEndWith(zoomAnimator: self)
+        })
+        
     }
     
     
@@ -119,7 +122,7 @@ class ZoomAnimator: NSObject {
                 return
         }
         
-        //
+        // these are optional functions in the delegates that get called before the animation runs
         self.fromDelegate?.transitionWillStartWith(zoomAnimator: self)
         self.toDelegate?.transitionWillStartWith(zoomAnimator: self)
         
@@ -142,24 +145,25 @@ class ZoomAnimator: NSObject {
         
         let finalTransitionSize = toReferenceImageViewFrame
         
-        UIView.animate(withDuration: transitionDuration(using: transitionContext),
-                       delay: 0,
-                       options: [],
-                       animations: {
-                         fromVC.view.alpha = 0                                  // animate transparency of source view out
-                         self.transitionImageView?.frame = finalTransitionSize  // animate size of image view
-                         toVC.tabBarController?.tabBar.alpha = 1                // animate transparency of tab bar in
-                       }, completion: { _ in
-                         self.transitionImageView?.removeFromSuperview()
-                         self.transitionImageView = nil
-                         toReferenceImageView.isHidden = false
-                         fromReferenceImageView.isHidden = false
-                        
-                         transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-                         self.toDelegate?.transitionDidEndWith(zoomAnimator: self)
-                         self.fromDelegate?.transitionDidEndWith(zoomAnimator: self)
-                       }
-        )
+        UIView.animate(
+            withDuration: transitionDuration(using: transitionContext),
+            delay: 0,
+            options: [],
+            animations: {
+                fromVC.view.alpha = 0                                  // animate transparency of source view out
+                self.transitionImageView?.frame = finalTransitionSize  // animate size of image view
+                toVC.tabBarController?.tabBar.alpha = 1                // animate transparency of tab bar in
+        },
+            completion: { _ in
+                self.transitionImageView?.removeFromSuperview()
+                self.transitionImageView = nil
+                toReferenceImageView.isHidden = false
+                fromReferenceImageView.isHidden = false
+                
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+                self.toDelegate?.transitionDidEndWith(zoomAnimator: self)
+                self.fromDelegate?.transitionDidEndWith(zoomAnimator: self)
+        })
     }
     
     
